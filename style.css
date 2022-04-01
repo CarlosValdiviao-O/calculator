@@ -1,0 +1,73 @@
+#buttons {
+    display: flex;
+    max-width: 500px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 380px;
+    height: 560px;
+    margin-top: 30px;
+    gap: 10px;
+    border: 1px solid black;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: 30px;
+    flex: 1;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.row >button {
+    flex: 1;
+}
+
+#buttons .one {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#clear, #delete {
+    flex: 0 1 0;
+}
+
+button {
+    padding: 30px;
+    font-size: 16px;
+}
+
+#results {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 8px;
+    align-items: flex-end;
+    align-self: flex-end;
+    gap: 8px;
+    margin-bottom: 20px;
+    width: 330px;
+    flex: 1;
+    word-wrap: break-word;
+    word-break: break-all;
+    text-align: right;
+}
+
+#former {
+    font-size: 16px;
+}
