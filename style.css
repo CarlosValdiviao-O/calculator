@@ -57,12 +57,13 @@ button {
     flex-direction: column;
     border: 1px solid black;
     border-radius: 8px;
+    justify-content: end;
     align-items: flex-end;
     align-self: flex-end;
     gap: 8px;
     margin-bottom: 20px;
     width: 330px;
-    flex: 1;
+    height: 60px;
     word-wrap: break-word;
     word-break: break-all;
     text-align: right;
