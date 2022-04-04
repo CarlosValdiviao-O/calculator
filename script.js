@@ -24,12 +24,17 @@ let clear = document.querySelector('#clear');
 clear.addEventListener('click', clearCalculator);
 
 let decimal = document.querySelector('#float');
-decimal.addEventListener('click', checkDecimal);
+decimal.addEventListener('click', displayDecimal);
 
 function display (e) {
     if (resolved == true && e.target.innerHTML <10) {
         resolved = false;
         clearCalculator();
+    }
+    let lastChar = currentStr.substring(currentStr.length-1);
+    if (lastChar == '÷' || lastChar == '*' || lastChar == '-' || lastChar == '+' || lastChar == '.'){
+        if (e.target.innerHTML == '÷' || e.target.innerHTML == '*' || e.target.innerHTML == '-' || e.target.innerHTML == '+' ) currentStr = currentStr.substring(0, currentStr.length-1);
+        else if (currentStr.length == 1 && currentStr != '-') currentStr = ''; 
     }
     currentStr += e.target.innerHTML;
     current.textContent = currentStr;
@@ -37,6 +42,7 @@ function display (e) {
 
 function saveNumbers(e){
     if (currentStr.substring(0, 1) == '-') firstIsNegative = true;
+    else firstIsNegative = false;
     resolved = false;
     let lastChar = currentStr.substring(currentStr.length-2, currentStr.length-1);
     if (lastChar == '÷' || lastChar == '*' || lastChar == '-' || lastChar == '+'){
@@ -50,7 +56,6 @@ function saveNumbers(e){
     }
     else if (variables[1] == '') {
         auxArray = currentStr.split(/[^0-9.]/g);
-        console.log(auxArray);
         if (auxArray[1] != '' && !firstIsNegative && auxArray[0] != '') {
             variables[0] = +auxArray[0];
             variables[1] = +auxArray[1];
@@ -59,8 +64,6 @@ function saveNumbers(e){
             variables[0] = +auxArray[1] * (-1);
             variables[1] = +auxArray[2];    
         }
-        console.log(variables);
-        console.log(operator);
         if (typeof variables[0] == 'number' && typeof variables [1] == 'number') operate(operator, e.target.innerHTML);
         operator = e.target.innerHTML;
     }  
@@ -68,7 +71,6 @@ function saveNumbers(e){
 
 function operate(operator, newOperator){
     aux = variables[0];
-    console.log(variables);
     if (operator == '÷') variables[0] = variables[0] / variables[1];
     else if (operator == '*') variables[0] = variables[0] * variables[1];
     else if (operator == '-') variables[0] = variables[0] - variables[1];
@@ -77,25 +79,32 @@ function operate(operator, newOperator){
     variables[1] = '';
     currentStr = `${variables[0]}` + newOperator;
     current.textContent = currentStr;
-    console.log (variables);
     if (variables[0] > 0) firstIsNegative = false;
 }
 
 function resolve(){
+    if (resolved) return;
+    let lastChar = currentStr.substring(currentStr.length-1);
+    if (lastChar == '÷' || lastChar == '*' || lastChar == '-' || lastChar == '+'){
+        variables[0] = +currentStr.substring(0, currentStr.length-1);
+        former.textContent = variables[0] + '='; 
+        return;
+    }
     if (currentStr.substring(0, 1) == '-') firstIsNegative = true;
     if (variables[0] == 0 && variables[1] == 0){
         variables[0] = +currentStr;
-        former.textContent = variables[0] + '=';  
+        former.textContent = variables[0] + '='; 
+        return; 
     } 
     auxArray = currentStr.split(/[^0-9.]/g);
-    console.log(auxArray); 
     if (auxArray.length > 1 && auxArray[1] != '') {
         if (firstIsNegative) {
             variables[0] = +auxArray[1] * (-1);
             variables[1] = +auxArray[2]; 
         }
         else variables[1] = +auxArray[1];
-        if (typeof variables[0] == 'number' && typeof variables [1] == 'number') operate(operator, '');
+        console.log(variables);
+        if (!Number.isNaN(variables[0]) && !Number.isNaN(variables[1])) operate(operator, '');
     } 
     else {
         former.textContent = variables[0] + '=';
@@ -106,15 +115,28 @@ function resolve(){
 function clearCalculator() {
     currentStr = '';
     current.textContent = '0';
-    variables = [0, 0];
+    variables = ['', ''];
     operator = '';
     former.textContent = '';
 }
 
-function checkDecimal () {
-
+function displayDecimal (e) {
+    if (resolved == true) {
+        resolved = false;
+        clearCalculator();
+    }
+    auxArray = currentStr.split(/[^0-9.]/g);
+    if (auxArray[auxArray.length-1].lastIndexOf('.') < 0) {
+        let lastChar = currentStr.substring(currentStr.length-1);
+        if (lastChar == '÷' || lastChar == '*' || lastChar == '-' || lastChar == '+' || currentStr == '') {
+            currentStr += '0';
+            current.textContent = currentStr;  
+        }
+        currentStr += e.target.innerHTML;
+        current.textContent = currentStr;
+    }
 }
 
 
-// bugs to solve when pressed '=' many times gives NaN or Infinity
-//               when pressed a operator (except for '-') at the start of the string cant operate
+// bugs when using 0
+
