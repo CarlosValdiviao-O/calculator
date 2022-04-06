@@ -1,8 +1,18 @@
-#buttons {
+@font-face {
+    font-family: 'seven_segmentregular';
+    src: url('seven_segment-webfont.woff2') format('woff2'),
+         url('seven_segment-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
     display: flex;
-    max-width: 500px;
     flex-direction: column;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;  
+    background-color: darkcyan;
 }
 
 #container {
@@ -13,25 +23,29 @@
     width: 380px;
     height: 560px;
     margin-top: 30px;
-    gap: 10px;
-    border: 1px solid black;
+    gap: 0px;
+    border: 1px solid darkgrey;
     padding: 20px;
     box-sizing: border-box;
     font-size: 30px;
     flex: 1;
+    background-color: darkgrey;
+    border-radius: 12px;
 }
 
-body {
+#buttons {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;  
+    gap: 6px;
+    flex: 1;
+    width: 330px;
 }
 
 .row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: inherit;
+    flex: 1;
 }
 
 .row >button {
@@ -45,17 +59,32 @@ body {
 
 #clear, #delete {
     flex: 0 1 0;
+    font-size: 16px;
+    background-color: darkred;
+}
+
+.number {
+    background-color: grey;
+}
+
+.operator, #float, #equal {
+    background-color: black;
 }
 
 button {
-    padding: 30px;
-    font-size: 16px;
+    padding: 6px;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+    border-radius: 8px;
+    color: white;
 }
 
 #results {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    border: 1px solid darkgrey;
     border-radius: 8px;
     justify-content: end;
     align-items: flex-end;
@@ -67,6 +96,8 @@ button {
     word-wrap: break-word;
     word-break: break-all;
     text-align: right;
+    background-color: rgba(21, 197, 21, 0.411);
+    font-family: 'seven_segmentregular';
 }
 
 #former {

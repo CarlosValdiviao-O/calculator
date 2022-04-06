@@ -8,44 +8,68 @@ let resolved = false;
 let firstIsNegative = false;
 let aux;
 let deleted = false;
+let pressed;
 
 let numbers = Array.from(document.querySelectorAll('.number'));
-for (let i=0;i < numbers.length; i++) numbers[i].addEventListener('click', display);
+for (let i=0;i < numbers.length; i++) {
+    numbers[i].addEventListener('click', saveKey);
+    numbers[i].addEventListener('click', display);
+}
 
 let operators = Array.from(document.querySelectorAll('.operator'));
 for (let i=0;i < operators.length; i++) {
+    operators[i].addEventListener('click', saveKey);
     operators[i].addEventListener('click', display);
     operators[i].addEventListener('click', saveNumbers); 
 }
 
 let equal = document.querySelector('#equal');
-equal.addEventListener('click',resolve);
+equal.addEventListener('click', resolve);
 
 let clear = document.querySelector('#clear');
 clear.addEventListener('click', clearCalculator);
 
 let decimal = document.querySelector('#float');
+decimal.addEventListener('click', saveKey);
 decimal.addEventListener('click', displayDecimal);
 
 let deleteButton = document.querySelector('#delete');
 deleteButton.addEventListener('click', deleteLast);
 
 window.addEventListener('keydown', function(e) {
-    console.log(e.keyCode);
+    let keyCode = e.keyCode;
+    if (keyCode > 95 && keyCode < 106) keyCode -= 48;
+    let key = document.querySelector(`.key[data-key="${keyCode}"]`);
+    console.log(keyCode);
+    if (key == null) return;
+    pressed = key.innerHTML;
+    if (keyCode > 47 && keyCode < 58) key.addEventListener('click', display());
+    else if (keyCode == 111 || keyCode == 109 || keyCode == 107 || keyCode == 106) {
+        key.addEventListener('click', display());
+        key.addEventListener('click', saveNumbers());  
+    }
+    else if (keyCode == 110) key.addEventListener('click', displayDecimal());
+    else if (keyCode == 13) key.addEventListener('click', resolve());
+    else if (keyCode == 8) key.addEventListener('click', deleteLast());
+    else if (keyCode == 46) key.addEventListener('click', clearCalculator());
 });
 
-function display (e) {
+function saveKey (e) {
+    pressed = e.target.innerHTML;
+}
+
+function display () {
     if (currentStr.length > 26) return;
-    if (resolved == true && e.target.innerHTML <10 || currentStr == 'Dude really?') {
+    if (resolved == true && pressed <10 || currentStr == 'Dude really?') {
         resolved = false;
         clearCalculator();
     }
     let lastChar = currentStr.substring(currentStr.length-1);
     if (lastChar == '÷' || lastChar == '*' || lastChar == '-' || lastChar == '+' || lastChar == '.'){
-        if (e.target.innerHTML == '÷' || e.target.innerHTML == '*' || e.target.innerHTML == '-' || e.target.innerHTML == '+' ) currentStr = currentStr.substring(0, currentStr.length-1);
+        if (pressed == '÷' || pressed == '*' || pressed == '-' || pressed == '+' ) currentStr = currentStr.substring(0, currentStr.length-1);
         else if (currentStr.length == 1 && currentStr != '-') currentStr = ''; 
     }
-    currentStr += e.target.innerHTML;
+    currentStr += pressed;
     current.textContent = currentStr;
     if (currentStr.length > 21) current.classList.add('decreaseSize');
     else current.classList.remove('decreaseSize');
@@ -64,17 +88,19 @@ function deleteLast() {
     if (currentStr.length < 22) current.classList.remove('decreaseSize');
 }
 
-function saveNumbers(e){
+function saveNumbers(){
     if (currentStr == '-' || currentStr == '+' || currentStr == '*' || currentStr == '÷') return;
     if (currentStr.substring(0, 1) == '-') firstIsNegative = true;
     else firstIsNegative = false;
+    auxArray = currentStr.split(/[^0-9.]/g);
+    if (firstIsNegative && auxArray.length > 2) deleted = false;
+    else if (auxArray.length > 1) deleted = false;
     resolved = false;
     if (typeof variables[0] != 'number' || deleted) { 
         variables[0] = +currentStr.substring(0, currentStr.length-1);
-        operator = e.target.innerHTML;
+        operator = pressed;
     }
-    else if (variables[1] == '' || deleted) {
-        auxArray = currentStr.split(/[^0-9.]/g);
+    else if (typeof variables[1] != 'number' || deleted) {
         if (auxArray[1] != '' && !firstIsNegative && auxArray[0] != '') {
             variables[0] = +auxArray[0];
             variables[1] = +auxArray[1];
@@ -83,8 +109,8 @@ function saveNumbers(e){
             variables[0] = +auxArray[1] * (-1);
             variables[1] = +auxArray[2];    
         }
-        if (typeof variables[0] == 'number' && typeof variables [1] == 'number') operate(operator, e.target.innerHTML);
-        operator = e.target.innerHTML;
+        if (typeof variables[0] == 'number' && typeof variables [1] == 'number') operate(operator, pressed);
+        operator = pressed;
     }  
     deleted = false;
 }
@@ -178,7 +204,7 @@ function clearCalculator() {
     former.textContent = '';
 }
 
-function displayDecimal (e) {
+function displayDecimal () {
     if (resolved == true || currentStr == 'Dude really?') {
         resolved = false;
         clearCalculator();
@@ -190,7 +216,7 @@ function displayDecimal (e) {
             currentStr += '0';
             current.textContent = currentStr;  
         }
-        currentStr += e.target.innerHTML;
+        currentStr += pressed;
         current.textContent = currentStr;
     }
 }
@@ -212,16 +238,7 @@ function getDecimals (num) {
     return counter;
 }
 
-
-// bugs when using 0 first fixed
-// add delete button solved
-// bug when clicking '=' when there is only one negative number fixed
-// fix bug with decimal after result fixed
-// bug after using clear followed by an operator, when using negatives and 'equal' fixed
-// elaborate on opeartors functions to deal better with decimals solved
-// fix display in both lines (former and current) when dealing with long strings fixed
-// add keyboard compatibility
-// improve the design
-// add 7 segments font
-// move things around in the code to make it look more presentable
-
+// add keyboard compatibility added
+// fix bug when deleting a negative as the second number solved
+// improve the design solved
+// add 7 segments font added
