@@ -51,7 +51,7 @@ window.addEventListener('keydown', function(e) {
     else if (keyCode == 110) key.addEventListener('click', displayDecimal());
     else if (keyCode == 13) key.addEventListener('click', resolve());
     else if (keyCode == 8) key.addEventListener('click', deleteLast());
-    else if (keyCode == 46) key.addEventListener('click', clearCalculator());
+    else if (keyCode == 46) key.addEventListener('click', clearCalculator);
 });
 
 function saveKey (e) {
